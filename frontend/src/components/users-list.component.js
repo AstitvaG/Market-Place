@@ -21,8 +21,8 @@ export default class UsersList extends Component {
     render() {
         return (
             <div>
-                <table className="table table-striped">
-                    <thead>
+                <table className="table table-responsive text-center table-hover table-bordered">
+                    <thead className="thead-dark">
                         <tr>
                             <th>Username</th>
                             <th>Email</th>

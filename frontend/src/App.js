@@ -23,36 +23,50 @@ function App() {
                 <Link to="/create" class="nav-link">Create User </Link>
               </li>
             </ul>
-            <ul class="navbar-nav navbar-right">
+            {/* <ul class="navbar-nav navbar-right">
               <li>
                 <form class="form-inline my-2 my-lg-0">
                   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
               </li>
-            </ul>
+            </ul> */}
             <ul class="navbar-nav navbar-right">
+              <li class="nav-item">
+                <a class="nav-link" href="#">Hey USERNAME!</a>
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Account
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">My Profile</a>
                   <a class="dropdown-item" href="#">My Orders</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#">Logout</a>
                 </div>
               </li>
-            {/* <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form> */}
             </ul>
           </div>
         </nav>
-        <div className="container">
-          <Route path="/" exact component={UsersList}/>
-          <Route path="/create" component={CreateUser}/>
+        <div className="container-fluid">
+          <div class="row justify-content-center  align-center">
+            <div class="form-group align-center">
+              <br/>
+              <br/>
+              <form class="form-inline my-2 my-lg-0 align-center">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+              <br/>
+            </div>
+          </div>
+          <div class="row justify-content-center align-center">
+            <div class="col-auto">
+              <Route path="/" exact component={UsersList}/>
+              <Route path="/create" component={CreateUser}/>
+            </div>
+          </div>
           <p>
             
           </p>
