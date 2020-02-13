@@ -51,14 +51,13 @@ function App() {
         </nav>
         <div className="container-fluid">
           <div class="row justify-content-center  align-center">
-            <div class="form-group align-center">
+            <div class="form-group align-center ">
               <br/>
               <br/>
               <form class="form-inline my-2 my-lg-0 align-center">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
               </form>
-              <br/>
             </div>
           </div>
           <div class="row justify-content-center align-center">
