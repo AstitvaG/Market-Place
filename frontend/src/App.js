@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import UsersList from './components/users-list.component'
 import CreateUser from './components/create-user.component'
 import Searchitem from './components/search-item.component'
-import Searchlist from  './components/search-list.component'
+import LoginSignup from  './components/login-signup.component'
 
 
 function App() {
@@ -67,7 +67,7 @@ function App() {
               <Route path="/" exact component={UsersList}/>
               <Route path="/create" component={CreateUser}/>
               <Route path="/search" component={Searchitem}/>
-              <Route path="/id" component={Searchlist}/>
+              <Route path="/new" component={LoginSignup}/>
             </div>
           </div>
           <p>

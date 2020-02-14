@@ -34,7 +34,16 @@ userRoutes.route('/').get(function(req, res) {
 
 // Adding a new user
 userRoutes.route('/add').post(function(req, res) {
-    let user = new User(req.body);
+    let user = new User({
+        username: req.body.username,
+        email: req.body.email
+    });
+    if(req.body.password){
+        user.password = user.generateHash(req.body.password);
+    }
+    else{
+        user.password = '';
+    }
     user.save()
         .then(user => {
             res.status(200).json({'User': 'User added successfully'});

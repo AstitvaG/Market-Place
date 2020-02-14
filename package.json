@@ -7,6 +7,7 @@
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.4.1",
     "cookie-session": "^1.4.0",
