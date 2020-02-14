@@ -44,10 +44,23 @@ userRoutes.route('/add').post(function(req, res) {
         });
 });
 
+// Adding a new search
+userRoutes.route('/id').post(function(req, res) {
+    let user = new User(req.body);
+    user.save()
+        .then(user => {
+            res.status(200).json({'Search': 'Search done successfully -> '+req.body.value});
+        })
+        .catch(err => {
+            res.status(400).send('Error');
+        });
+});
+
+
 // Getting a user by id
-userRoutes.route('/:id').get(function(req, res) {
+userRoutes.route('/search/:id').get(function(req, res) {
     let id = req.params.id;
-    User.findById(id, function(err, user) {
+    User.find({username: id}, function(err, user) {
         res.json(user);
     });
 });

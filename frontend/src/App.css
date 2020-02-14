@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.table td.fit, 
+.table th.fit {
+    white-space: nowrap;
+    width: 0%;
+}

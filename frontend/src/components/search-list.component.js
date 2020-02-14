@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-export default class UsersList extends Component {
+export default class Searchlist extends Component {
     
     constructor(props) {
+        console.log("Rec: "+props.url)
         super(props);
-        this.state = {users: []}
+        this.state = {users: [],url: props.url}
     }
 
     componentDidMount() {
-        axios.get('http://localhost:4000/')
+        axios.get('http://localhost:4000/search/'+this.state.url)
              .then(response => {
-                 this.setState({users: response.data});
+                 this.setState({users: response.data,url: this.state.url});
              })
              .catch(function(error) {
                  console.log(error);
