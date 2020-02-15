@@ -15,6 +15,7 @@ export default class LoginSignup extends Component {
         this.onChangeEmail = this.onChangeEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.onSignup = this.onSignup.bind(this);
+        this.onLogin = this.onLogin.bind(this);
 
         this.onGoToLogin = this.onGoToLogin.bind(this);
         this.onGoToSignup = this.onGoToSignup.bind(this);
@@ -34,8 +35,6 @@ export default class LoginSignup extends Component {
     }
 
     onSignup(e) {
-        e.preventDefault();
-
         const newUser = {
             username: this.state.username,
             email: this.state.email,
@@ -50,6 +49,29 @@ export default class LoginSignup extends Component {
             email: '',
             password: ''
         });
+    }
+
+    onLogin(e){
+        var loginDetails = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        var resx;
+        if (loginDetails.username && loginDetails.username)
+        {
+            axios.post('http://localhost:4000/login',loginDetails)
+            .then(res => {resx=res})
+            .catch(function(error) {
+                console.log(error);
+            });
+
+            this.setState({
+                username: '',
+                email: '',
+                password: ''
+            });
+        }
+        console.log(resx)
     }
 
     onGoToLogin(e){
@@ -84,8 +106,8 @@ export default class LoginSignup extends Component {
             <div className="context-user">
                 <div className="form-structor">
                     <div className="signup">
-                        <form onSubmit={this.onSignup}>
                             <h2 className="form-title" id="signup"  onClick={this.onGoToSignup}><span>or</span>Sign up</h2>
+                        <form onSubmit={this.onSignup}>
                             <div className="form-holder">
                                 <input type="text" className="input" placeholder="Name"
                                         value={this.state.username}
@@ -97,21 +119,23 @@ export default class LoginSignup extends Component {
                                     value={this.state.password}
                                     onChange={this.onChangePassword} />
                             </div>
-                            <button type="submit" className="submit-btn">Sign up</button>
+                            <button type="submit" onClick={this.onSignup} className="submit-btn">Sign up</button>
                         </form>
                     </div>
                     <div className="login slide-up">
                         <div className="center">
-                            <h2 className="form-title" id="login" onClick={this.onGoToLogin}><span>or</span>Log in</h2>
-                            <div className="form-holder">
-                                <input type="email" className="input" placeholder="Email"
-                                    value={this.state.email}
-                                    onChange={this.onChangeEmail} />
-                                <input type="password" className="input" placeholder="Password" 
-                                    value={this.state.password}
-                                    onChange={this.onChangePassword} />
-                            </div>
-                            <button className="submit-btn">Log in</button>
+                                <h2 className="form-title" id="login" onClick={this.onGoToLogin}><span>or</span>Log in</h2>
+                                    <form onSubmit={this.onLogin}>
+                                <div className="form-holder">
+                                        <input type="text" className="input" placeholder="Userame"
+                                            value={this.state.username}
+                                            onChange={this.onChangeUsername} />
+                                        <input type="password" className="input" placeholder="Password" 
+                                            value={this.state.password}
+                                            onChange={this.onChangePassword} />
+                                        <button onClick={this.onLogin} className="submit-btn">Log in</button>
+                                </div>
+                                    </form>
                         </div>
                     </div>
                 </div>

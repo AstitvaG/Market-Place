@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import UsersList from './components/users-list.component'
-import CreateUser from './components/create-user.component'
 import Searchitem from './components/search-item.component'
 import LoginSignup from  './components/login-signup.component'
 
@@ -22,7 +21,7 @@ function App() {
                 <Link to="/" className="nav-link">Home <span className="sr-only">(current)</span></Link>
               </li>
               <li className="nav-item">
-                <Link to="/create" className="nav-link">Create User </Link>
+                <Link to="/new" className="nav-link">Create User </Link>
               </li>
             </ul>
             {/* <ul className="navbar-nav navbar-right">
@@ -52,20 +51,9 @@ function App() {
           </div>
         </nav>
         <div className="container-fluid">
-          {/* <div className="row justify-content-center  align-center">
-            <div className="form-group align-center ">
-              <br/>
-              <br/>
-              <form className="form-inline my-2 my-lg-0 align-center">
-                <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
-            </div>
-          </div> */}
           <div className="row justify-content-center align-center">
             <div className="col-auto">
               <Route path="/" exact component={UsersList}/>
-              <Route path="/create" component={CreateUser}/>
               <Route path="/search" component={Searchitem}/>
               <Route path="/new" component={LoginSignup}/>
             </div>

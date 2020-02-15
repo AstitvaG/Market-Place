@@ -53,18 +53,27 @@ userRoutes.route('/add').post(function(req, res) {
         });
 });
 
-// Adding a new search
-userRoutes.route('/id').post(function(req, res) {
-    let user = new User(req.body);
-    user.save()
-        .then(user => {
-            res.status(200).json({'Search': 'Search done successfully -> '+req.body.value});
-        })
-        .catch(err => {
-            res.status(400).send('Error');
-        });
-});
 
+userRoutes.route('/login').post(function(req, res) {
+    console.log("Entered ::"+req.body.username+":"+req.body.password);
+    if(!req.body.username || !req.body.password){
+        console.log("LS"+req.body.username+":"+req.body.password);
+        res.status(409).json({'User': 'Please enter both username and password'});
+    }
+    else{
+        User.findOne({username: req.body.username}, function(err, user) {
+            if(user && user.validPassword(req.body.password)){
+                console.log("Logged in: "+ req.body.username);
+                res.status(200).json({ 'User': 'Logged in as: '+req.body.username });
+                // res.redirect('/');
+            }
+            else{
+                console.log("Invalid");
+                res.status(401).json({'User': 'Invalid Credentials!'})
+            }
+        });
+    }
+});
 
 // Getting a user by id
 userRoutes.route('/search/:id').get(function(req, res) {
@@ -78,4 +87,5 @@ app.use('/', userRoutes);
 
 app.listen(PORT, function() {
     console.log("Server is running on port: " + PORT);
+    console.log("http://localhost:"+PORT+"/")
 });
