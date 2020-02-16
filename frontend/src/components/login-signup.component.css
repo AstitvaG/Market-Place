@@ -97,6 +97,11 @@
 	 width: 100%;
 	 font-size: 12px;
 }
+
+ .lbl{
+	font-size: 12px;
+ }
+
  .form-structor .signup .form-holder .input:last-child {
 	 border-bottom: 0;
 }
@@ -269,12 +274,13 @@
 }
 
 .switch {
-	position: relative;
+	position: absolute;
 	display: inline-block;
 	width: 36px;
 	height: 20px;
-	float: right;
+	right: 0px;
 	margin-top: 7;
+	right:25px;
   }
   
   .switch input { 

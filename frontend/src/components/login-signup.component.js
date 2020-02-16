@@ -119,10 +119,16 @@ export default class LoginSignup extends Component {
                                 <input type="password" required className="input" placeholder="Password" 
                                     value={this.state.password}
                                     onChange={this.onChangePassword} />
-                                <label class="switch">
-                                    <input type="checkbox"/>
-                                    <span class="slider round"></span>
-                                </label>
+                                <br />
+                                <div className="d-flex container-fluid">
+                                    <label className="lbl">
+                                        Are you a vendor?
+                                    </label>
+                                    <label class="switch">
+                                        <input type="checkbox"/>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
                             </div>
                             <button type="submit" onClick={this.onSignup} className="submit-btn">Sign up</button>
                         </form>
