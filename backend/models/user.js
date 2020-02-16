@@ -10,6 +10,10 @@ let User = new mongoose.Schema({
     },
     password: {
         type: String
+    },
+    time:{
+        type: Date,
+        default: Date.now
     }
 });
 

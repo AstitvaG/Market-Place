@@ -52,24 +52,39 @@ userRoutes.route('/add').post(function(req, res) {
                 res.status(400).send('Error');
             });
     }
+    else res.status(413).json({error:"Empty args"})
 });
 
 
+function auth(req, res, next){
+    const token = req.header('auth-token');
+
+    if (!token) res.status(401).json({msg: "No token, authorisation denied!"});
+    else{
+        token = JSON.parse(token)
+        if(token.key == "Secret"){
+            req.user = token.id;
+            next()
+        }
+        else res.status(400).json({msg: 'Token is not valid'})
+    }
+}
+
 userRoutes.route('/login').post(function(req, res) {
-    console.log("Entered ::"+req.body.username+":"+req.body.password);
     if(!req.body.username || !req.body.password){
-        console.log("LS"+req.body.username+":"+req.body.password);
-        res.status(409).json({'User': 'Please enter both username and password'});
+        res.status(400).json({'User': 'Please enter both username and password'});
     }
     else{
         User.findOne({username: req.body.username}, function(err, user) {
             if(user && user.validPassword(req.body.password)){
-                console.log("Logged in: "+ req.body.username);
-                res.status(200).json({ 'User': 'Logged in as: '+req.body.username });
+                res.status(200).json({ user: {
+                    id: user.id,
+                    name: user.username,
+                    email: user.email
+                } });
                 // res.redirect('/');
             }
             else{
-                console.log("Invalid");
                 res.status(401).json({'User': 'Invalid Credentials!'})
             }
         });
@@ -77,7 +92,7 @@ userRoutes.route('/login').post(function(req, res) {
 });
 
 // Getting a user by id
-userRoutes.route('/search/:id').get(function(req, res) {
+userRoutes.route('/search/:id').get(auth,function(req, res) {
     let id = req.params.id;
     User.find({username: id}, function(err, user) {
         res.json(user);
