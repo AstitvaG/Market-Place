@@ -13,7 +13,7 @@ export default class Searchitem extends Component {
         this.state = {
             searchval: '',
             showReasult: false,
-            firstTime: true
+            toggle: true
         }
 
         this.onChangeSearchval = this.onChangeSearchval.bind(this);
@@ -21,25 +21,28 @@ export default class Searchitem extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
     
-    onChangeSearchval(event) {
-        this.setState({ searchval: event.target.value });
+    onChangeSearchval(e) {
+        this.setState({ searchval: e.target.value });
+        // this.onSubmit(e);
     }
 
 
     onSubmit(e) {
         e.preventDefault();
         this.temp=this.state.searchval
+        this.toggle_temp = !this.state.toggle
         this.setState({
             showReasult: true,
-            searchval: '',
-            firstTime: false
+            // searchval: '',
+            toggle: this.toggle_temp
         });
         // document.getElementById("results").innerHTML = ""
     }
 
     getComponent(){
-        if (this.state.showReasult && !this.state.firstTime) {  // show the modal if state showModal is true
+        if (this.state.showReasult && !this.state.toggle) {  // show the modal if state showModal is true
             console.log("Got:" + this.temp)
+            this.state.toggle = !this.state.toggle
             return <Searchlist url={this.temp}/>;
         } else {
             return null;

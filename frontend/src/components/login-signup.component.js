@@ -109,15 +109,20 @@ export default class LoginSignup extends Component {
                             <h2 className="form-title" id="signup"  onClick={this.onGoToSignup}><span>or</span>Sign up</h2>
                         <form onSubmit={this.onSignup}>
                             <div className="form-holder">
-                                <input type="text" className="input" placeholder="Name"
+                                <input type="text" required className="input" placeholder="Name"
                                         value={this.state.username}
                                         onChange={this.onChangeUsername} />
-                                <input type="email" className="input" placeholder="Email"
+                                <input type="email" required 
+                                        className="input" placeholder="Email"
                                         value={this.state.email}
                                         onChange={this.onChangeEmail} />
-                                <input type="password" className="input" placeholder="Password" 
+                                <input type="password" required className="input" placeholder="Password" 
                                     value={this.state.password}
                                     onChange={this.onChangePassword} />
+                                <label class="switch">
+                                    <input type="checkbox"/>
+                                    <span class="slider round"></span>
+                                </label>
                             </div>
                             <button type="submit" onClick={this.onSignup} className="submit-btn">Sign up</button>
                         </form>
@@ -125,17 +130,17 @@ export default class LoginSignup extends Component {
                     <div className="login slide-up">
                         <div className="center">
                                 <h2 className="form-title" id="login" onClick={this.onGoToLogin}><span>or</span>Log in</h2>
-                                    <form onSubmit={this.onLogin}>
-                                <div className="form-holder">
-                                        <input type="text" className="input" placeholder="Userame"
+                                <form onSubmit={this.onLogin}>
+                                    <div className="form-holder">
+                                        <input type="text" required className="input" placeholder="Username"
                                             value={this.state.username}
                                             onChange={this.onChangeUsername} />
-                                        <input type="password" className="input" placeholder="Password" 
+                                        <input type="password" required className="input" placeholder="Password" 
                                             value={this.state.password}
                                             onChange={this.onChangePassword} />
-                                        <button onClick={this.onLogin} className="submit-btn">Log in</button>
-                                </div>
-                                    </form>
+                                    </div>
+                                    <button onClick={this.onLogin} className="submit-btn">Log in</button>
+                                </form>
                         </div>
                     </div>
                 </div>

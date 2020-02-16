@@ -7,6 +7,8 @@ const app = express();
 const PORT = 4000;
 const userRoutes = express.Router();
 
+var isLoggedIn = false;
+
 let User = require('./models/user');
 
 app.use(cors());
@@ -34,23 +36,22 @@ userRoutes.route('/').get(function(req, res) {
 
 // Adding a new user
 userRoutes.route('/add').post(function(req, res) {
-    let user = new User({
-        username: req.body.username,
-        email: req.body.email
-    });
-    if(req.body.password){
-        user.password = user.generateHash(req.body.password);
-    }
-    else{
-        user.password = '';
-    }
-    user.save()
-        .then(user => {
-            res.status(200).json({'User': 'User added successfully'});
-        })
-        .catch(err => {
-            res.status(400).send('Error');
+    if(req.body.username && req.body.email && req.body.password){
+        let user = new User({
+            username: req.body.username,
+            email: req.body.email
         });
+        if(req.body.password){
+            user.password = user.generateHash(req.body.password);
+        }
+        user.save()
+            .then(user => {
+                res.status(200).json({'User': 'User added successfully'});
+            })
+            .catch(err => {
+                res.status(400).send('Error');
+            });
+    }
 });
 
 
