@@ -17,6 +17,7 @@ export default class VendorMain extends Component {
         }
 
         this.onChangeSearchval = this.onChangeSearchval.bind(this);
+        this.logout = this.logout.bind(this);
     }
     
     onChangeSearchval(e) {
@@ -28,6 +29,13 @@ export default class VendorMain extends Component {
         var element = document.getElementById("main_nav");
         element.classList.toggle("rounded-pill");
         element.classList.toggle("rounded-lg");
+    }
+    
+    logout() {
+        console.log('Entered here')
+        localStorage.setItem('isLoggedIn', 'false');
+        localStorage.setItem('userId', 'null');
+        window.location.reload(true);
       }
 
     render() {
@@ -70,7 +78,7 @@ export default class VendorMain extends Component {
                             <a className="dropdown-item" href="#">My Profile</a>
                             <a className="dropdown-item" href="#">My Orders</a>
                             <div className="dropdown-divider"></div>
-                            <a className="dropdown-item" href="#">Logout</a>
+                            <a className="dropdown-item" onClick={this.logout}>Logout</a>
                             </div>
                         </li>
                         </ul>
@@ -89,26 +97,23 @@ export default class VendorMain extends Component {
                                 <div className="panel-heading">
                                 <h1>Add Products</h1>
                                 </div>
-                                <form onSubmit={this.onSignup}>
+                                <form className="form" onSubmit={this.onSignup}>
                                     <div className="panel-body m-5">
                                         <div className="form-holder">
-                                            <input type="text" required className="input" placeholder="Name"
+                                            <input type="text" required className="input form-control my-3" placeholder="Name"
                                                     value={this.state.username}
-                                                    onChange={this.onChangeUsername} /><br />
+                                                    onChange={this.onChangeUsername} />
                                             <input type="email" required 
-                                                    className="input" placeholder="Email"
+                                                    className="input form-control my-3" placeholder="Email"
                                                     value={this.state.email}
-                                                    onChange={this.onChangeEmail} /><br />
-                                            <input type="password" required className="input" placeholder="Password" 
+                                                    onChange={this.onChangeEmail} />
+                                            <input type="password" required className="input form-control my-3" placeholder="Password" 
                                                 value={this.state.password}
-                                                onChange={this.onChangePassword} /><br />
-                                            <br />
+                                                onChange={this.onChangePassword} />
                                         </div>
                                     </div>
                                     <div className="panel-footer m-5">
-                                        <h3>$19</h3>
-                                        <h4>per month</h4>
-                                        <button type="submit" className="btn btn-lg">Sign Up</button>
+                                        <button type="submit" className="btn btn-lg">Add</button>
                                     </div>
                                 </form>
                             </div>      

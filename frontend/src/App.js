@@ -6,12 +6,34 @@ import Searchitem from './components/search-item.component'
 import LoginSignup from  './components/login-signup.component'
 import VendorMain from  './components/vendor-main.component'
 
-function toggle(){
-  var element = document.getElementById("main_nav");
-  element.classList.toggle("rounded-pill");
-  element.classList.toggle("rounded-lg");
+
+
+function req(vax) {
+  var loginstats = localStorage.getItem('isLoggedIn');
+  var typestats = localStorage.getItem('type');
+  console.log("LOL:",typestats, loginstats);
+  if (loginstats === "true" && typestats === 'Vendor') {
+    console.log("LOL inside:",typestats, loginstats);
+    return VendorMain;
+  }
+  else if (loginstats === "true" && typestats === 'Customer')
+  {
+    console.log("LOL inside:",typestats, loginstats);
+    return Searchitem;
+  }
+  else return LoginSignup;
 }
 
+// function checklogin(vax)
+// {
+//   var loginstats = localStorage.getItem('isLoggedIn');
+//   var typestats = localStorage.getItem('type');
+//   console.log("LOL:",typestats, loginstats);
+//   if (loginstats === "true" && typestats === 'Vendor'){
+//     console.log("LOL inside:",typestats, loginstats);
+//     return vax;}
+//   else return LoginSignup;
+// }
 
 function App() {
   return (
@@ -19,10 +41,10 @@ function App() {
        <div className="container-fluid">
               <Route path="/" exact component={UsersList}/>
               <Route path="/search" component={Searchitem}/>
-              <Route path="/new" component={LoginSignup}/>
-              <Route path="/vendor" component={VendorMain}/>
+              <Route path="/enter" component={req(LoginSignup)}/>
+              {/* <Route path="/vendor" component={checklogin(VendorMain)}/> */}
           <p>
-            
+          {localStorage.getItem('userId')}
           </p>
           <br/>
         </div>

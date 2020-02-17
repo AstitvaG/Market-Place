@@ -11,18 +11,21 @@ let User = new mongoose.Schema({
     password: {
         type: String
     },
-    time:{
+    type:{
+        type: String
+    },
+    time: {
         type: Date,
         default: Date.now
     }
 });
 
-User.methods.generateHash = function(password) {
+User.methods.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
-  
+
 // checking if password is valid
-User.methods.validPassword = function(password) {
+User.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 

@@ -39,20 +39,28 @@ userRoutes.route('/add').post(function(req, res) {
     if(req.body.username && req.body.email && req.body.password){
         let user = new User({
             username: req.body.username,
-            email: req.body.email
+            email: req.body.email,
+            type: req.body.type
         });
         if(req.body.password){
             user.password = user.generateHash(req.body.password);
         }
         user.save()
             .then(user => {
-                res.status(200).json({'User': 'User added successfully'});
+                res.status(200).json({
+                    user: {
+                        id: user.id,
+                        name: user.username,
+                        email: user.email,
+                        type: user.type
+                    }
+                });
             })
             .catch(err => {
                 res.status(400).send('Error');
             });
     }
-    else res.status(413).json({error:"Empty args"})
+    else res.status(400).json({error:"Empty args"})
 });
 
 
@@ -80,7 +88,8 @@ userRoutes.route('/login').post(function(req, res) {
                 res.status(200).json({ user: {
                     id: user.id,
                     name: user.username,
-                    email: user.email
+                    email: user.email,
+                    type: user.type
                 } });
                 // res.redirect('/');
             }
