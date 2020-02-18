@@ -126,7 +126,7 @@ export default class VendorMain extends Component {
                             </ul>
                             <ul className="navbar-nav navbar-right">
                                 <li className="nav-item">
-                                    <a href="/search" className="nav-link" href="#">Hey <strong>{localStorage.getItem('username')}</strong> !</a>
+                                    <a href="/search" className="nav-link" href="/enter">Hey <strong>{localStorage.getItem('username')}</strong> !</a>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
