@@ -58,10 +58,11 @@ export default class LoginSignup extends Component {
         axios.post('http://localhost:4000/add', newUser)
             .then(res => {
                 localStorage.setItem('userId', res.data.user.id);
+                localStorage.setItem('username', res.data.user.name);
                 localStorage.setItem('isLoggedIn', true);
                 localStorage.setItem('type', res.data.user.type);
                 window.location.reload(true)
-             });
+            });
 
         this.setState({
             username: '',
@@ -77,12 +78,13 @@ export default class LoginSignup extends Component {
         }
         if (loginDetails.username && loginDetails.username) {
             axios.post('http://localhost:4000/login', loginDetails)
-                .then(res => { 
+                .then(res => {
                     localStorage.setItem('userId', res.data.user.id);
+                    localStorage.setItem('username', res.data.user.name);
                     localStorage.setItem('isLoggedIn', true);
                     localStorage.setItem('type', res.data.user.type);
                     window.location.reload(true)
-                 })
+                })
 
             this.setState({
                 username: '',

@@ -36,3 +36,13 @@
     background-color: #f4511e;
     color: #fff;
   }
+
+  .panel-body-1{
+    max-height: 212px;
+    overflow-y: auto;
+  }
+
+  .panel-body{
+    height: 212px;
+    overflow-y: auto;
+  }

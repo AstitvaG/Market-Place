@@ -45,6 +45,8 @@ function App() {
               {/* <Route path="/vendor" component={checklogin(VendorMain)}/> */}
           <p>
           {localStorage.getItem('userId')}
+          <br />
+          {localStorage.getItem('username')}
           </p>
           <br/>
         </div>
