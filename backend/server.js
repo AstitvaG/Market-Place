@@ -9,6 +9,7 @@ const userRoutes = express.Router();
 
 let User = require('./models/user');
 let Product = require('./models/product');
+let Userproduct = require('./models/userproduct');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -47,7 +48,7 @@ userRoutes.route('/products/my').post(function (req, res) {
 });
 
 
-// Upd  ating a product by its productid
+// Updating a product by its productid
 userRoutes.route('/products/update').post(function (req, res) {
     Product.findById(req.body.id, function (err, result) {
         if (err) console.log(err);
@@ -90,6 +91,52 @@ userRoutes.route('/products/add').post(function (req, res) {
             });
     }
     else res.status(413).send('Some values missing !')
+});
+
+// Adding a new userproduct or order
+userRoutes.route('/userproducts/add').post(function (req, res) {
+    if (req.body.userid && req.body.buy_amount && req.body.productid) {
+        let userproduct = new Userproduct({
+            userid: req.body.userid,
+            buy_amount: req.body.buy_amount,
+            productid: req.body.productid
+        });
+        userproduct.save()
+            .then(userproduct => {
+                res.status(200).json(userproduct);
+            })
+            .catch(err => {
+                res.status(400).send('Error');
+            });
+    }
+    else res.status(413).send('Some values missing !')
+});
+
+// Getting all my ordered products
+userRoutes.route('/userproducts/my').post(function (req, res) {
+    Userproduct.find({ userid: req.body.userid })
+        .sort({ time: -1 })
+        .exec(function (err, body) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(body);
+            }
+        });
+});
+
+
+// Getting product details
+userRoutes.route('/userproducts/get').post(function (req, res) {
+    Product.findById(req.body.productid)
+        .sort({ time: -1 })
+        .exec(function (err, body) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(body);
+            }
+        });
 });
 
 
@@ -162,10 +209,10 @@ userRoutes.route('/login').post(function (req, res) {
 });
 
 // Getting a user by id
-userRoutes.route('/search/:id').get(auth, function (req, res) {
+userRoutes.route('/search/:id').get(function (req, res) {
     let id = req.params.id;
-    User.find({ username: id }, function (err, user) {
-        res.json(user);
+    Product.find({ name: id }, function (err, product) {
+        res.json(product);
     });
 });
 

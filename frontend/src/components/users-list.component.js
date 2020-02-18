@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 
 export default class UsersList extends Component {
-    
+
     constructor(props) {
         super(props);
-        this.state = {users: []}
+        this.state = { users: [] }
     }
 
     componentDidMount() {
         axios.get('http://localhost:4000/')
-             .then(response => {
-                 this.setState({users: response.data});
-             })
-             .catch(function(error) {
-                 console.log(error);
-             })
+            .then(response => {
+                this.setState({ users: response.data });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     }
 
     render() {
@@ -24,21 +24,23 @@ export default class UsersList extends Component {
                 <table className="table table-responsive text-center table-hover table-bordered">
                     <thead className="thead-dark">
                         <tr>
-                            <th className="table fit">Username</th>
-                            <th className="table fit">Email</th>
+                            <th className="fit">Username</th>
+                            <th className="fit">Type</th>
+                            <th className="fit">Email</th>
                         </tr>
                     </thead>
                     <tbody>
-                    { 
-                        this.state.users.map((currentUser, i) => {
-                            return (
-                                <tr>
-                                    <td className="table fit">{currentUser.username}</td>
-                                    <td className="table fit">{currentUser.email}</td>
-                                </tr>
-                            )
-                        })
-                    }
+                        {
+                            this.state.users.map((currentUser, i) => {
+                                return (
+                                    <tr>
+                                        <td className="fit">{currentUser.username}</td>
+                                        <td className="fit">{currentUser.type}</td>
+                                        <td className="fit">{currentUser.email}</td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </table>
             </div>
