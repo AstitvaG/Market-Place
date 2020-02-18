@@ -277,7 +277,7 @@ export default class VendorMain extends Component {
                                 </div>
                                 <div className="panel-footer m-5">
                                     <h3>{this.state.Products.length - this.countListed - this.countReady}</h3>
-                                    <h4>items ready to be dispatched</h4>
+                                    <h4>items dispatched</h4>
                                 </div>
                             </div>
                         </div>
