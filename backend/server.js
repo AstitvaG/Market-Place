@@ -211,9 +211,16 @@ userRoutes.route('/login').post(function (req, res) {
 // Getting a user by id
 userRoutes.route('/search/:id').get(function (req, res) {
     let id = req.params.id;
-    Product.find({ name: id }, function (err, product) {
-        res.json(product);
-    });
+    if (id == "61") {
+        Product.find(function (err, product) {
+            res.json(product);
+        });
+    }
+    else {
+        Product.find({ name: id }, function (err, product) {
+            res.json(product);
+        });
+    }
 });
 
 app.use('/', userRoutes);

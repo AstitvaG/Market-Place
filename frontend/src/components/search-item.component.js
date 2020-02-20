@@ -12,42 +12,64 @@ export default class Searchitem extends Component {
 
         this.state = {
             searchval: '',
-            showReasult: false,
-            toggle: true
+            url: '61',
+            myproducts: [],
+            productdetails: [],
+            sort_type: "Name"
         }
 
         this.onChangeSearchval = this.onChangeSearchval.bind(this);
-        this.getComponent = this.getComponent.bind(this);
+        // this.getComponent = this.getComponent.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+
+    componentDidMount() {
+        // var userid = localStorage.getItem('userId');
+        axios.post('http://localhost:4000/userproducts/my', { userid: localStorage.getItem('userId') })
+            .then(response => {
+                // Object.entries(tempresp).length === 0 && tempresp.constructor === Object
+                this.setState({ myproducts: response.data });
+                // var tempresp = new JSON();
+                var tempresp = [];
+                for (var i = 0; i < response.data.length; i++) {
+                    // for (var i = 0; i < body.length; i++) {
+                    axios.post('http://localhost:4000/userproducts/get', { productid: response.data[i].productid })
+                        .then(response1 => {
+                            tempresp[tempresp.length] = response1.data;
+                            // return response.data
+                            this.setState({ productdetails: tempresp });
+                            // console.log(response.data[i].productid)
+                            // console.log(tempresp.length, tempresp)
+                            // console.log("---------------------------------")
+                        })
+                    // Product.findById(body[i].productid, function (err1, result) {
+                    // })
+                    // }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        this.countListed = 0;
+        this.countReady = 0;
+    }
+
     onChangeSearchval(e) {
-        this.setState({ searchval: e.target.value });
-        // this.onSubmit(e);
+        this.setState({
+            searchval: e.target.value,
+            url: e.target.value
+        });
     }
 
 
     onSubmit(e) {
         e.preventDefault();
-        this.temp = this.state.searchval
-        this.toggle_temp = !this.state.toggle
         this.setState({
-            showReasult: true,
-            // searchval: '',
-            toggle: this.toggle_temp
+            url: this.state.searchval
         });
-        // document.getElementById("results").innerHTML = ""
     }
 
-    getComponent() {
-        if (this.state.showReasult && !this.state.toggle) {  // show the modal if state showModal is true
-            console.log("Got:" + this.temp)
-            this.state.toggle = !this.state.toggle
-            return <Searchlist url={this.temp} />;
-        } else {
-            return null;
-        }
-    }
 
     logout() {
         console.log('Entered here')
@@ -56,6 +78,35 @@ export default class Searchitem extends Component {
         localStorage.setItem('userId', 'null');
         window.location.reload(true);
     }
+
+    getdetails(productid) {
+        return axios.post('http://localhost:4000/userproducts/get', { productid: productid })
+            .then(response => {
+                return response.data
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    getval(i, str) {
+        if (this.state.productdetails[i])
+            return this.state.productdetails[i][str];
+        else return "";
+    }
+
+    getstatus(i) {
+        var isDispatched = this.getval(i, "isDispatched")
+        var avail_amount = this.getval(i, "avail_amount")
+        if (isDispatched == "Yes")
+            return "Dispatched"
+        else if (isDispatched == "No" && avail_amount != "0")
+            return "Waiting"
+        else// if (isDispatched == "No" && avail_amount != "0")
+            return "Placed"
+    }
+
+
 
     render() {
         return (
@@ -86,7 +137,7 @@ export default class Searchitem extends Component {
                     </ul> */}
                             <ul className="navbar-nav navbar-right">
                                 <li className="nav-item">
-                                    <a href="/search" className="nav-link" href="#">Hey USERNAME!</a>
+                                    <a href="/search" className="nav-link" href="#">Hey {localStorage.getItem('username')}!</a>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -104,7 +155,7 @@ export default class Searchitem extends Component {
 
                     </div>
                 </nav>
-
+                <p>Search Here</p>
                 <div className="row justify-content-center  align-center">
                     <div className="form-group align-center ">
                         <br />
@@ -118,12 +169,52 @@ export default class Searchitem extends Component {
                                 onChange={this.onChangeSearchval}
                             />
                             <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+
                         </form>
+                        <br />
+                        <div className="dropdown">
+                            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Sort by: {this.state.sort_type}
+                            </button>
+                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Name"})}>Name</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Cost low to high"})}>Cost: low to high</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Cost high to low"})}>Cost: high to low</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Seller rating"})}>Seller rating</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Available amount"})}>Available amount</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Date"})}>Date</a>
+                            </div>
+                        </div>
                         <div id="results">
                             <br />
-                            {this.getComponent()}
+                            <Searchlist url={this.state.url} key={this.state.url+"/"+this.state.sort} sort={this.state.sort_type}/>
                         </div>
                     </div>
+                </div>
+                <div className="row justify-content-center  align-center">
+                    <table className="table text-center">
+                        <tbody>
+                            {
+                                this.state.myproducts.map((product, i) => {
+                                    // var productdetails = this.getdetails(product.productid);
+                                    // console.log(productdetails)
+                                    return (
+                                        <tr key={i}>
+                                            <td className="fit">{this.getval(i, "name")}</td>
+                                            <td className="fit">{product.buy_amount}</td>
+                                            {/* <td className="fit">{product.isDispatched}</td> */}
+                                            <td className="fit">{this.getval(i, "cost")}</td>
+                                            <td className="fit">{this.getstatus(i)}</td>
+                                            <td className="fit">{this.getval(i, "avail_amount") + "/" + this.getval(i, "total_amount")}</td>
+                                            <td className="fit">
+                                                <button className="btn btn-sm btn-dark" onClick={e => this.onDispatch(product._id)}>Review</button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         )
