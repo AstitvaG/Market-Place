@@ -10,6 +10,7 @@ const userRoutes = express.Router();
 let User = require('./models/user');
 let Product = require('./models/product');
 let Userproduct = require('./models/userproduct');
+let Review = require('./models/reviews');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -23,9 +24,20 @@ connection.once('open', function () {
 
 // API endpoints
 
+// Getting all the reviews
+userRoutes.route('/reviews/get').post(function (req, res) {
+    Review.find({ productid: req.body.productid }, function (err, reviews) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(reviews);
+        }
+    });
+});
+
 // Getting all the vendors
 userRoutes.route('/vendors').get(function (req, res) {
-    User.find({type: "Vendor"},function (err, users) {
+    User.find({ type: "Vendor" }, function (err, users) {
         if (err) {
             console.log(err);
         } else {
@@ -34,9 +46,43 @@ userRoutes.route('/vendors').get(function (req, res) {
     });
 });
 
+
+// Adding a new product
+userRoutes.route('/reviews/add').post(function (req, res) {
+    if (req.body.username && req.body.productid && req.body.review && req.body.vendorid) {
+        let review = new Review({
+            username: req.body.username,
+            productid: req.body.productid,
+            review: req.body.review,
+            vendorid: req.body.vendorid,
+        });
+        review.save()
+            .then(review => {
+                res.status(200).json(review);
+            })
+            .catch(err => {
+                res.status(400).send('Error');
+            });
+    }
+    else res.status(413).send('Some values missing !')
+});
+
 // Getting all my products
 userRoutes.route('/products/my').post(function (req, res) {
     Product.find({ userid: req.body.userid })
+        .sort({ time: -1 })
+        .exec(function (err, body) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(body);
+            }
+        });
+});
+
+// Getting all my products
+userRoutes.route('/products/get').get(function (req, res) {
+    Product.find()
         .sort({ time: -1 })
         .exec(function (err, body) {
             if (err) {

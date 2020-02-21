@@ -50,7 +50,7 @@ export default class Searchlist extends Component {
 
     getRating(vendorid) {
         if (this.state.vendors.length) {
-            return this.state.vendors.find(vendor => vendor._id === vendorid).avg_review;
+            return this.state.vendors.find(vendor => vendor._id === vendorid).avg_review.toFixed(2);
         }
     }
 
@@ -123,6 +123,7 @@ export default class Searchlist extends Component {
                             <th className="fit">Product id</th>
                             <th className="fit">Available</th>
                             <th className="fit">Cost</th>
+                            <th className="fit">Seller Rating</th>
                             <th className="fit">Quantity</th>
                             <th className="fit">Buy Now</th>
                         </tr>

@@ -1,4 +1,12 @@
-# MERN Stack Boilerplate
+# Assignment 2: Market Place
+
+# To use:
+Just type on the terminal
+'''
+yarn dev
+'''
+and then enjoy.
+The UI and UX are self explanetory
 
 ## Setup
 

@@ -40,11 +40,11 @@ function App() {
               <Route path="/search" component={Searchitem}/>
               <Route path="/enter" component={req(LoginSignup)}/>
               {/* <Route path="/vendor" component={checklogin(VendorMain)}/> */}
-          <p>
+          {/* <p>
           {localStorage.getItem('userId')}
           <br />
           {localStorage.getItem('username')}
-          </p>
+          </p> */}
           <br/>
         </div>
        

@@ -54,6 +54,7 @@ export default class VendorMain extends Component {
 
     countListed = 0;
     countReady = 0;
+    countDis = 0;
 
     onAddProduct() {
         var userid = localStorage.getItem('userId');
@@ -87,6 +88,7 @@ export default class VendorMain extends Component {
             })
         this.countListed = 0;
         this.countReady = 0;
+        this.countDis = 0;
     }
 
     onDispatch(productid) {
@@ -105,7 +107,7 @@ export default class VendorMain extends Component {
             })
     }
 
-    onCancel(productid,avail_amount) {
+    onCancel(productid, avail_amount) {
         axios.post('http://localhost:4000/products/update', {
             id: productid,
             avail_amount: avail_amount,
@@ -121,6 +123,24 @@ export default class VendorMain extends Component {
             })
     }
 
+    getReviews(productid) {
+        axios.post('http://localhost:4000/reviews/get', {
+            productid: productid,
+        })
+            .then(response => {
+                var Res = ""
+                var i = 0
+                for (i in response.data) {
+                    Res += "By :" + response.data[i].username + "\n" + "Review:" + response.data[i].review + "\n--------------\n"
+                }
+                alert(Res)
+                console.log(response.data,productid);
+                // this.setState({ Products: response.data });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
 
     render() {
         return (
@@ -130,8 +150,8 @@ export default class VendorMain extends Component {
                     <div className="container-fluid">
                         <ul className="navbar-nav mr-auto navbar-left">
                             <li className="nav-item active">
-                                    <a href="/" className="nav-link">MARKET PLACE<span className="sr-only">(current)</span></a>
-                                </li>
+                                <a href="/" className="nav-link">MARKET PLACE<span className="sr-only">(current)</span></a>
+                            </li>
                         </ul>
                         <button className="navbar-toggler" type="button" onClick={this.toggle} data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
@@ -149,7 +169,7 @@ export default class VendorMain extends Component {
                                         Account
                             </a>
                                     <div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a className="dropdown-item" onClick={this.logout}>Logout</a>
+                                        <a className="dropdown-item" href="#" onClick={this.logout}>Logout</a>
                                     </div>
                                 </li>
                             </ul>
@@ -205,7 +225,7 @@ export default class VendorMain extends Component {
                                                 this.state.Products.map((product, i) => {
                                                     if (i === 0)
                                                         this.countListed = 0;
-                                                    if (product.avail_amount && product.isDispatched=="No") {
+                                                    if (product.avail_amount && product.isDispatched == "No") {
                                                         this.countListed++;
 
                                                         return (
@@ -215,7 +235,7 @@ export default class VendorMain extends Component {
                                                                 <td className="fit">{product.avail_amount}</td>
                                                                 <td className="fit">{product.isDispatched}</td>
                                                                 <td className="fit">
-                                                                    <button className="btn btn-sm btn-dark" onClick={e => this.onCancel(product._id,product.avail_amount)}>Cancel</button>
+                                                                    <button className="btn btn-sm btn-dark" onClick={e => this.onCancel(product._id, product.avail_amount)}>Cancel</button>
                                                                 </td>
                                                             </tr>
                                                         )
@@ -280,11 +300,16 @@ export default class VendorMain extends Component {
                                         <tbody>
                                             {
                                                 this.state.Products.map((product, i) => {
+                                                    if (i === 0) this.countDis = 0;
                                                     if (!product.avail_amount && product.isDispatched === "Yes") {
+                                                        this.countDis++;
                                                         return (
                                                             <tr key={i}>
                                                                 <td className="fit">{product.name}</td>
                                                                 <td className="fit">{product.cost}</td>
+                                                                <td className="fit">
+                                                                    <button className="btn btn-sm btn-dark" onClick={e => this.getReviews(product._id)}>Reviews <i className="fas fa-medal"></i></button>
+                                                                </td>
                                                                 {/* <td className="fit">{product._id}</td> */}
                                                                 <td className="fit">{product.isDispatched}</td>
                                                             </tr>
@@ -296,7 +321,7 @@ export default class VendorMain extends Component {
                                     </table>
                                 </div>
                                 <div className="panel-footer m-5">
-                                    <h3>{this.state.Products.length - this.countListed - this.countReady}</h3>
+                                    <h3>{this.countDis}</h3>
                                     <h4>items dispatched</h4>
                                 </div>
                             </div>
