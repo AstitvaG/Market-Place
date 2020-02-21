@@ -105,6 +105,22 @@ export default class VendorMain extends Component {
             })
     }
 
+    onCancel(productid,avail_amount) {
+        axios.post('http://localhost:4000/products/update', {
+            id: productid,
+            avail_amount: avail_amount,
+            isDispatched: "Canceled"
+        })
+            .then(response => {
+                window.location.reload(true);
+                console.log(response);
+                // this.setState({ Products: response.data });
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
 
     render() {
         return (
@@ -189,7 +205,7 @@ export default class VendorMain extends Component {
                                                 this.state.Products.map((product, i) => {
                                                     if (i === 0)
                                                         this.countListed = 0;
-                                                    if (product.avail_amount) {
+                                                    if (product.avail_amount && product.isDispatched=="No") {
                                                         this.countListed++;
 
                                                         return (
@@ -197,6 +213,10 @@ export default class VendorMain extends Component {
                                                                 <td className="fit">{product.name}</td>
                                                                 <td className="fit">{product.cost}</td>
                                                                 <td className="fit">{product.avail_amount}</td>
+                                                                <td className="fit">{product.isDispatched}</td>
+                                                                <td className="fit">
+                                                                    <button className="btn btn-sm btn-dark" onClick={e => this.onCancel(product._id,product.avail_amount)}>Cancel</button>
+                                                                </td>
                                                             </tr>
                                                         )
                                                     }

@@ -9,9 +9,11 @@ export default class Searchlist extends Component {
             users: [],
             url: props.url,
             Qnty: 0,
-            toggle: true
+            toggle: true,
+            vendors: []
         }
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
+        this.getRating = this.getRating.bind(this);
     }
 
 
@@ -35,6 +37,20 @@ export default class Searchlist extends Component {
                 .catch(function (error) {
                     console.log(error);
                 })
+        }
+        axios.get('http://localhost:4000/vendors')
+            .then(response1 => {
+                this.setState({ vendors: response1.data });
+                // console.log(this.state.vendors)
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+    getRating(vendorid) {
+        if (this.state.vendors.length) {
+            return this.state.vendors.find(vendor => vendor._id === vendorid).avg_review;
         }
     }
 
@@ -114,14 +130,14 @@ export default class Searchlist extends Component {
                     <tbody>
                         {
                             this.sortvalues(this.state.users).map((product, i) => {
-                                if (product.avail_amount)
+                                if (product.avail_amount && product.isDispatched == "No")
                                     return (
                                         <tr key={i}>
                                             <td className="fit">{product.name}</td>
                                             <td className="fit">{product._id}</td>
                                             <td className="fit">{product.avail_amount + "/" + product.total_amount}</td>
                                             <td className="fit">{product.cost}</td>
-                                            {/* <td className="fit">{product.time}</td> */}
+                                            <td className="fit">{this.getRating(product.userid)}</td>
                                             <td className="fit">
                                                 <input type="Number" required className="input form-control form-control-sm m-0" placeholder="Quantity"
                                                     onChange={this.onChangeQuantity} />

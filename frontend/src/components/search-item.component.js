@@ -51,8 +51,6 @@ export default class Searchitem extends Component {
             .catch(function (error) {
                 console.log(error);
             })
-        this.countListed = 0;
-        this.countReady = 0;
     }
 
     onChangeSearchval(e) {
@@ -100,10 +98,73 @@ export default class Searchitem extends Component {
         var avail_amount = this.getval(i, "avail_amount")
         if (isDispatched == "Yes")
             return "Dispatched"
+        else if (isDispatched == "Canceled")// if (isDispatched == "No" && avail_amount != "0")
+            return "Canceled"
         else if (isDispatched == "No" && avail_amount != "0")
             return "Waiting"
-        else// if (isDispatched == "No" && avail_amount != "0")
+        else
             return "Placed"
+    }
+
+
+    onEdit(productid, prev_purchase, curravail, id) {
+        var new_amount = prompt("Please enter new quantity (0," + (curravail + prev_purchase) + ")", prev_purchase);
+        if (new_amount != null && /^\d+$/.test(new_amount) && curravail + prev_purchase - parseInt(new_amount) >= 0
+            && parseInt(new_amount) >= 0) {
+
+            axios.post('http://localhost:4000/products/update', {
+                id: productid,
+                avail_amount: curravail + prev_purchase - parseInt(new_amount),
+                isDispatched: "No"
+            })
+                .then(response => {
+                    window.location.reload(true);
+                    console.log(response);
+                    alert("Updated successfully")
+                    // this.setState({ Products: response.data });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            axios.post('http://localhost:4000/userproducts/update', {
+                id: id,
+                buy_amount: parseInt(new_amount),
+            })
+                .then(response => {
+                    window.location.reload(true);
+                    console.log(response);
+                    // this.setState({ Products: response.data });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        }
+        else {
+            alert("Wrong or null value supplied")
+        }
+    }
+
+    onRate(vendorid) {
+        var new_amount = prompt("Please enter new rating (0,5):"+vendorid, 5);
+        if (new_amount != null && /^\d+$/.test(new_amount) && parseInt(new_amount)<=5 && parseInt(new_amount)>=0) {
+
+            axios.post('http://localhost:4000/addrating', {
+                id: vendorid,
+                newReview: parseInt(new_amount)
+            })
+                .then(response => {
+                    console.log(response);
+                    alert("Rating added successfully")
+                    window.location.reload(true);
+                    // this.setState({ Products: response.data });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        else {
+            alert("Wrong or null value supplied")
+        }
     }
 
 
@@ -177,17 +238,17 @@ export default class Searchitem extends Component {
                                 Sort by: {this.state.sort_type}
                             </button>
                             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Name"})}>Name</a>
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Cost low to high"})}>Cost: low to high</a>
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Cost high to low"})}>Cost: high to low</a>
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Seller rating"})}>Seller rating</a>
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Available amount"})}>Available amount</a>
-                                <a className="dropdown-item" href="#" onClick={e => this.setState({sort_type:"Date"})}>Date</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Name" })}>Name</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Cost low to high" })}>Cost: low to high</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Cost high to low" })}>Cost: high to low</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Seller rating" })}>Seller rating</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Available amount" })}>Available amount</a>
+                                <a className="dropdown-item" href="#" onClick={e => this.setState({ sort_type: "Date" })}>Date</a>
                             </div>
                         </div>
                         <div id="results">
                             <br />
-                            <Searchlist url={this.state.url} key={this.state.url+"/"+this.state.sort} sort={this.state.sort_type}/>
+                            <Searchlist url={this.state.url} key={this.state.url + "/" + this.state.sort} sort={this.state.sort_type} />
                         </div>
                     </div>
                 </div>
@@ -195,22 +256,44 @@ export default class Searchitem extends Component {
                     <table className="table text-center">
                         <tbody>
                             {
-                                this.state.myproducts.map((product, i) => {
-                                    // var productdetails = this.getdetails(product.productid);
-                                    // console.log(productdetails)
-                                    return (
-                                        <tr key={i}>
-                                            <td className="fit">{this.getval(i, "name")}</td>
-                                            <td className="fit">{product.buy_amount}</td>
-                                            {/* <td className="fit">{product.isDispatched}</td> */}
-                                            <td className="fit">{this.getval(i, "cost")}</td>
-                                            <td className="fit">{this.getstatus(i)}</td>
-                                            <td className="fit">{this.getval(i, "avail_amount") + "/" + this.getval(i, "total_amount")}</td>
-                                            <td className="fit">
-                                                <button className="btn btn-sm btn-dark" onClick={e => this.onDispatch(product._id)}>Review</button>
-                                            </td>
-                                        </tr>
-                                    )
+                                this.state.myproducts.sort((a, b) => new Date(b.time) - new Date(a.time)).map((product, i) => {
+                                    if (true)
+                                        // var productdetails = this.getdetails(product.productid);
+                                        // console.log(productdetails)
+                                        return (
+                                            <tr key={i}>
+                                                <td className="fit">{this.getval(i, "name")}</td>
+                                                <td className="fit">{product.buy_amount}</td>
+                                                {/* <td className="fit">{product.isDispatched}</td> */}
+                                                <td className="fit">{this.getval(i, "cost")}</td>
+                                                <td className="fit">{this.getstatus(i)}</td>
+                                                <td className="fit">{this.getval(i, "avail_amount") + "/" + this.getval(i, "total_amount")}</td>
+                                                {
+                                                    this.getstatus(i) == "Waiting" &&
+                                                    <td className="fit">
+                                                        <button className="btn btn-sm btn-dark" onClick={e => this.onEdit(product.productid, product.buy_amount, this.getval(i, "avail_amount"), product._id)}>Edit <i className="fas fa-edit"></i></button>
+                                                    </td>
+                                                }
+                                                {
+                                                    this.getstatus(i) == "Placed" &&
+                                                    <td className="fit">
+                                                        <button className="btn btn-sm btn-dark" onClick={e => this.onRate(this.getval(i, "userid"))}>Rate <i className="fas fa-star"></i></button>
+                                                    </td>
+                                                }
+                                                {
+                                                    this.getstatus(i) == "Dispatched" &&
+                                                    <td className="fit">
+                                                        <button className="btn btn-sm btn-dark" onClick={e => this.onDispatch(product._id)}>Review <i className="fas fa-medal"></i></button>
+                                                    </td>
+                                                }
+                                                {
+                                                    this.getstatus(i) == "Canceled" &&
+                                                    <td className="fit">
+                                                        <button className="btn btn-sm btn-dark" onClick={e => this.onDispatch(product._id)}>Why <i className="fas fa-question"></i></button>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        )
                                 })
                             }
                         </tbody>

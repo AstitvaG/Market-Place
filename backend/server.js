@@ -23,9 +23,9 @@ connection.once('open', function () {
 
 // API endpoints
 
-// Getting all the users
-userRoutes.route('/').get(function (req, res) {
-    User.find(function (err, users) {
+// Getting all the vendors
+userRoutes.route('/vendors').get(function (req, res) {
+    User.find({type: "Vendor"},function (err, users) {
         if (err) {
             console.log(err);
         } else {
@@ -125,6 +125,27 @@ userRoutes.route('/userproducts/my').post(function (req, res) {
         });
 });
 
+// Updating a product by its productid
+userRoutes.route('/userproducts/update').post(function (req, res) {
+    Userproduct.findById(req.body.id, function (err, result) {
+        if (err) console.log(err);
+        else if (!result && !req.body.buy_amount)
+            res.status(404).send("data is not found");
+        else {
+            result.buy_amount = req.body.buy_amount;
+            result.save()
+                .then(body => {
+                    res.json({
+                        body
+                    });
+                })
+                .catch(err => {
+                    res.status(400).send("Update not possible");
+                });
+        }
+    });
+});
+
 
 // Getting product details
 userRoutes.route('/userproducts/get').post(function (req, res) {
@@ -167,6 +188,28 @@ userRoutes.route('/add').post(function (req, res) {
             });
     }
     else res.status(400).json({ error: "Empty args" })
+});
+
+
+// Adding a new user rating
+userRoutes.route('/addrating').post(function (req, res) {
+    User.findById(req.body.id, function (err, result) {
+        if (err) console.log(err);
+        else if (!result && !req.body.newReview)
+            res.status(404).send("data is not found");
+        else {
+            result.avg_review = (result.avg_review * result.no_of_reviews + req.body.newReview) / (++result.no_of_reviews)
+            result.save()
+                .then(body => {
+                    res.json({
+                        body
+                    });
+                })
+                .catch(err => {
+                    res.status(400).send("Update not possible");
+                });
+        }
+    });
 });
 
 
