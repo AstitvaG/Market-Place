@@ -1,6 +1,6 @@
-# Assignment 2: Market Place
+# Market Place
 
-# To use:
+## To use:
 Just type on the terminal
 '''
 yarn dev
