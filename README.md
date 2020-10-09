@@ -1,4 +1,4 @@
-# Market Place
+# Market Place...one stop destination for bulk orders..
 
 ## To use:
 Just type on the terminal
